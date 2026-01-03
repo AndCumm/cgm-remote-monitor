@@ -3,7 +3,7 @@ name: Weekly MongoDB Backup
 on:
   schedule:
     - cron: '0 3 * * 0' # Ogni Domenica alle 03:00 UTC
-  workflow_dispatch: # Permette di lanciarlo anche a mano
+  workflow_dispatch: # Permette di lanciarlo a mano
 
 jobs:
   backup:
@@ -14,13 +14,13 @@ jobs:
 
       - name: Install MongoDB Tools
         run: |
-          wget -q https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu-x86_64-100.9.4.tgz
+          # Link corretto per Ubuntu 22.04
+          wget -q https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2204-x86_64-100.9.4.tgz
           tar -xzf mongodb-database-tools-*.tgz
           sudo cp mongodb-database-tools-*/bin/mongodump /usr/local/bin/
 
       - name: Create Backup
         env:
-          # Qui usa la "Secret" che avevamo impostato, o puoi scriverla diretta se il repo è privato
           MONGO_URI: ${{ secrets.MONGODB_URI }}
         run: |
           mongodump --uri="$MONGO_URI" --archive=backup_$(date +%Y%m%d).gz --gzip
